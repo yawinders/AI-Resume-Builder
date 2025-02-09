@@ -12,7 +12,7 @@ const app = express();
 
 app.use(cors());
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://your-deployed-frontend.com'], // Update with frontend URLs
+    origin: ['http://localhost:5173', 'https://ai-resume-builder-1-i1sf.onrender.com'], // Update with frontend URLs
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true // Allow cookies if needed
 };
