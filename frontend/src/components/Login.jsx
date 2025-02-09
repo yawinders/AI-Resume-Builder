@@ -10,6 +10,8 @@ import RotatingGears from "../miscellaneous/RotatingGears.jsx";
 
 function Login({ setToken }) {
     const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    console.log(API_BASE_URL);
+
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false)
     const bgColor = useColorModeValue('gray.50', 'gray.900');
