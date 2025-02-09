@@ -27,11 +27,11 @@ function ResumeMaker() {
 
     const [showPalette, setShowPalette] = useState(false);
     const colors = [
-        "#3498db", // Blue
-        "#e74c3c", // Red
-        "#2ecc71", // Green
-        "#f39c12", // Orange
-        "#9b59b6", // Purple
+        "#3498db",
+        "#e74c3c",
+        "#2ecc71",
+        "#f39c12",
+        "#9b59b6",
         "#1abc9c", // Teal
         "#e67e22", // Carrot
         "#ecf0f1", // Light Gray
@@ -214,17 +214,20 @@ function ResumeMaker() {
         <Box bgGradient="linear(to-r, blue.400, purple.600)" minHeight="100vh">
             <HStack spacing={12} align="stretch" p={6} flexWrap="wrap">
                 <Icon cursor={"pointer"} as={FaHome} mr={2} fontSize="3rem" onClick={() => navigate('/dashboard')} />
-                <Box display="flex" w="50%" justifyContent="space-between" gap="100px">
+                <Box display="flex" w={["40%", "40%", "50%"]} justifyContent="space-between" gap="100px">
                     <Icon as={FaPallet} mr={2} fontSize="3rem" cursor={"pointer"} onClick={() => setShowPalette(!showPalette)} />
                     {showPalette && (
                         <Flex
                             bg="white"
-                            p={2}
+                            p={{ base: 2, md: 4 }}
                             boxShadow="md"
                             borderRadius="md"
                             position="absolute"
-                            mt="5"
+                            mt={{ base: 2, md: 5 }}
+                            left={{ base: "5%", md: "10%" }}
+                            right={{ base: "5%", md: "10%" }}
                             zIndex="10"
+                            w={{ base: "90%", md: "auto" }}
                         >
                             {colors.map((color) => (
                                 <Box
@@ -248,9 +251,9 @@ function ResumeMaker() {
                 </Box>
             </HStack>
 
-            <HStack spacing={6} align="stretch" p={6} flexWrap="wrap">
+            <HStack w="100%" spacing={6} align="stretch" p={6} flexWrap="wrap">
                 {/* Left Side - Multi-Step Form */}
-                <Box w="50%" p={6} borderRadius="lg" bg="white" boxShadow="xl">
+                <Box w={["100%", "100%", "50%"]} p={6} borderRadius="lg" bg="white" boxShadow="xl">
                     <HStack justify="space-between">
                         <Heading size="md">
                             <Icon as={steps[step].icon} mr={2} />

@@ -69,7 +69,10 @@ function ResumePreview({ formData, themeColor }) {
             <Box
                 mb="20px"
                 ref={resumeRef}
-                w={resumeData ? "60%" : "45%"}
+                w={{
+                    base: "100%",  // 100% width on mobile
+                    md: resumeData ? "60%" : "47%"  // Dynamic width on medium+ screens
+                }}
                 mx={resumeData ? "auto" : null}
                 p={6}
                 bg="gray.50"
