@@ -6,6 +6,7 @@ import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import Globe from "react-globe.gl";
 
 function Register() {
+    const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
     const [formData, setFormData] = useState({ name: "", email: "", password: "" });
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
@@ -64,7 +65,7 @@ function Register() {
                     "Content-type": "application/json"
                 }
             }
-            const { data } = await axios.post("http://localhost:5000/api/user/register", formData, config);
+            const { data } = await axios.post(`${API_BASE_URL}/api/user/register`, formData, config);
 
             toast({
                 title: data.message,

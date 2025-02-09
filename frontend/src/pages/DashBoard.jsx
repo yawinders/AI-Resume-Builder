@@ -11,6 +11,7 @@ import { AuthContext } from "../context/authContext";
 import resumeThumbaNail from "../assets/resume thumbnail.webp"
 
 function Dashboard() {
+    const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
     const [resumes, setResumes] = useState([]);
     const [newResumeName, setNewResumeName] = useState("");
     const [loading, setLoading] = useState(false)
@@ -55,7 +56,7 @@ function Dashboard() {
 
             // console.log(user);
             // Fetch saved resumes
-            axios.get(`http://localhost:5000/api/resume/${user.userId}`, {
+            axios.get(`${API_BASE_URL}/api/resume/${user.userId}`, {
                 headers: { Authorization: `Bearer ${user.token}` }
             }).then(response => {
                 // console.log(response.data);

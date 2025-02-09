@@ -7,7 +7,7 @@ import Dashboard from './pages/DashBoard.jsx';
 import ResumeMaker from './pages/ResumeMaker.jsx';
 import Navbar from './components/Navbar.jsx';
 import ResumePreview from './components/ResumePreview.jsx';
-import ResumeProvider from './context/resumeContext.jsx';
+
 import { protectedRoutes } from './protectedRoutes.jsx'
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <AuthProvider>
-      {/* <ResumeProvider> */}
+
       {showNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Login />} />
@@ -29,7 +29,7 @@ function App() {
         <Route path="/create-resume" element={<protectedRoutes><ResumeMaker /></protectedRoutes>} />
         <Route path='/resume-preview' element={<protectedRoutes><ResumePreview /></protectedRoutes>} />
       </Routes>
-      {/* </ResumeProvider> */}
+
     </AuthProvider>
   );
 }

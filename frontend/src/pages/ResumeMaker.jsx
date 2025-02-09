@@ -9,7 +9,7 @@ import { skills } from "../skills.js";
 
 
 import Rating from "../components/Rating.jsx";
-import { useResumeContext } from "../context/resumeContext.jsx";
+
 
 const steps = [
     { label: "Personal Info", icon: FaUser },
@@ -23,7 +23,7 @@ const steps = [
 
 function ResumeMaker() {
 
-
+    const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
     const [showPalette, setShowPalette] = useState(false);
     const colors = [
@@ -125,7 +125,7 @@ function ResumeMaker() {
             const user = JSON.parse(localStorage.getItem("userInfo"));
 
             const newResume = { resumeId: resumeData._id, userId: user.userId, userName: formData.name, jobTitle: formData.jobTitle, address: formData.address, phoneNumber: formData.phone, email: formData.email, jobSummary: formData.jobSummary, company: formData.company, duration: formData.duration, role: formData.role, experience: formData.experience, education: formData.education, skills: formData.skills, interests: formData.hobbies, languages: formData.languages, themeColor };
-            await axios.post("http://localhost:5000/api/resume/update", newResume, {
+            await axios.post(`${API_BASE_URL}/api/resume/update`, newResume, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             toast({

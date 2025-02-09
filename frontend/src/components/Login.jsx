@@ -9,6 +9,7 @@ import RotatingGears from "../miscellaneous/RotatingGears.jsx";
 
 
 function Login({ setToken }) {
+    const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false)
     const bgColor = useColorModeValue('gray.50', 'gray.900');
@@ -55,7 +56,7 @@ function Login({ setToken }) {
                     "Content-type": "application/json"
                 }
             }
-            const { data } = await axios.post("http://localhost:5000/api/user/login", formData, config);
+            const { data } = await axios.post(`${API_BASE_URL}/api/user/login`, formData, config);
             toast({
                 title: "Login Successfuly",
                 status: "success",
