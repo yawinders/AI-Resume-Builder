@@ -9,6 +9,7 @@ import { skills } from "../skills.js";
 
 
 import Rating from "../components/Rating.jsx";
+import { useAuthentication } from "../context/authContext.jsx";
 
 
 const steps = [
@@ -50,6 +51,7 @@ function ResumeMaker() {
     const [loading, setLoading] = useState(false)
     const [aiLoading, setAiLoading] = useState(false)
     const [suggestions, setSuggestions] = useState({});
+    const { user } = useAuthentication()
 
     const toast = useToast()
     const location = useLocation()
@@ -61,9 +63,9 @@ function ResumeMaker() {
 
     const [step, setStep] = useState(0);
     const [formData, setFormData] = useState({
-        name: resumeData.userName,
+        name: resumeData.userName || user.name,
         jobTitle: resumeData.jobTitle,
-        email: resumeData.email,
+        email: resumeData.email || user.email,
         address: resumeData.address,
         phone: resumeData.phoneNumber,
         company: resumeData.company,

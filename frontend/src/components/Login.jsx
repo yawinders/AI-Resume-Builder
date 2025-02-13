@@ -6,12 +6,13 @@ import { FaEnvelope, FaLock, FaPenFancy, FaRobot, FaUser } from "react-icons/fa"
 import { keyframes } from "framer-motion";
 import CircleCanvas from "../miscellaneous/RotatingCircle.jsx";
 import RotatingGears from "../miscellaneous/RotatingGears.jsx";
+import { useAuthentication } from "../context/authContext.jsx";
 
 
 function Login({ setToken }) {
     const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-    // console.log(API_BASE_URL);
-
+    console.log(API_BASE_URL);
+    const { user, setUser, pic } = useAuthentication()
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false)
     const bgColor = useColorModeValue('gray.50', 'gray.900');
@@ -59,6 +60,8 @@ function Login({ setToken }) {
                 }
             }
             const { data } = await axios.post(`${API_BASE_URL}/api/user/login`, formData, config);
+            console.log(data);
+
             toast({
                 title: "Login Successfuly",
                 status: "success",
@@ -67,6 +70,9 @@ function Login({ setToken }) {
                 position: "bottom"
             })
             setLoading(false)
+            setUser(data)
+
+
             localStorage.setItem("userInfo", JSON.stringify(data));
             navigate("/dashboard");
         } catch (error) {

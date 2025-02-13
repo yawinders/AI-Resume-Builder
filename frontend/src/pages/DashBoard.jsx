@@ -13,13 +13,20 @@ import resumeThumbaNail from "../assets/resume thumbnail.webp"
 function Dashboard() {
     const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
     const [resumes, setResumes] = useState([]);
+    // const resume = useState([])
+    // console.log(resume);
+
     const [newResumeName, setNewResumeName] = useState("");
     const [loading, setLoading] = useState(false)
     const [delLoading, setDelLoading] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure();
     const navigate = useNavigate();
-    const { user } = useContext(AuthContext)
-    // console.log(user);
+    const { user, pic, setUser } = useContext(AuthContext)
+    // console.log(pic);
+
+    console.log(user);
+
+
     const toast = useToast();
 
     const handleAddResume = async () => {
@@ -136,7 +143,7 @@ function Dashboard() {
                     ))
                 ) : (
                     <VStack w="full" spacing={4}>
-                        <Image src="/no-data.png" boxSize="150px" alt="No resumes" />
+                        <Image src="/no-data.png" boxSize="150px" alt="" />
                         <Text fontSize="lg">No resumes created yet.</Text>
                     </VStack>
                 )}

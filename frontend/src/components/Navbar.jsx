@@ -1,7 +1,9 @@
 import React from "react";
-import { Box, Flex, Heading, Spacer, Button, HStack, IconButton, useDisclosure, Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack } from "@chakra-ui/react";
+import { Box, Flex, Heading, Spacer, Button, HStack, IconButton, useDisclosure, Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Avatar, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { useAuthentication } from "../context/authContext";
+import ProfileModal from "../miscellaneous/ProfileModal";
 
 function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -12,7 +14,7 @@ function Navbar() {
         token = user.token;
     }
 
-
+    const { pic } = useAuthentication()
     const handleLogout = () => {
         localStorage.removeItem("userInfo");
         navigate("/login");
@@ -38,6 +40,21 @@ function Navbar() {
 
                 {/* Desktop Navigation */}
                 <HStack spacing={6} display={{ base: "none", md: "flex" }}>
+                    <Menu >
+                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                            <Avatar size='sm' cursor='pointer'
+                                name={user.name}
+                                src={user.pic} />
+                        </MenuButton>
+                        <MenuList>
+                            <MenuItem color={"black"}>
+                                <ProfileModal user={user}>
+                                    My Profile
+                                </ProfileModal>
+                            </MenuItem>
+                            <MenuItem color={"black"} onClick={handleLogout}>Logout</MenuItem>
+                        </MenuList>
+                    </Menu>
                     <Button
                         as={Link} to="/dashboard"
                         variant="ghost" color="white"

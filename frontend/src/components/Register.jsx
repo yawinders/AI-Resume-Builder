@@ -2,15 +2,21 @@ import React, { useEffect, useState, useRef } from "react";
 import { Box, Input, Button, Heading, VStack, Text, useToast, Flex, useColorModeValue, Image } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaUpload, FaUser } from "react-icons/fa";
 import Globe from "react-globe.gl";
+import { useAuthentication } from "../context/authContext";
 
 function Register() {
+    const { pic, setPic } = useAuthentication()
     const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-    const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+    const [formData, setFormData] = useState({ name: "", email: "", password: "", pic: pic });
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
     const toast = useToast()
+
+    const [picLoading, setPicLoading] = useState(false)
+
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -112,6 +118,66 @@ function Register() {
         }
     }, []);
 
+
+    const handleProfileUpload = (pic) => {
+        setPicLoading(true)
+        if (pic === undefined) {
+            toast({
+                title: 'Please Select an Image.',
+                // description: "We've created your account for you.",
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            })
+            return;
+        }
+        if (pic.type === "image/jpeg" || pic.type === "image/png") {
+            const data = new FormData() // is a built-in JavaScript object used to construct a set of key-value pairs to send data using the fetch API
+            data.append("file", pic)  // append method adds a key-value pair to the FormData object.
+            data.append("upload_preset", "ai-resume-builder")
+            console.log(data);
+            // CLOUDINARY_URL=cloudinary://<your_api_key>:<your_api_secret>@deuein9wj
+            //https://deuein9wj.api.cloudinary.com/v1_1/image/upload
+            fetch("https://api.cloudinary.com/v1_1/deuein9wj/image/upload", {
+                method: "post",
+                body: data,
+            }).then((res) => res.json())
+                .then((data) => {
+                    // console.log(data);
+                    setFormData({ ...formData, pic: data.url.toString() })
+                    setPic(data.url.toString());
+                    setPicLoading(false);
+                    toast({
+                        title: "Uploaded Successfully",
+                        status: "success",
+                        duration: 5000,
+                        isClosable: true,
+                        position: "bottom",
+                    });
+                }).catch((error) => {
+                    toast({
+                        title: "Image Upload Failed!",
+                        status: "error",
+                        duration: 5000,
+                        isClosable: true,
+                        position: "bottom",
+                    });
+                    setPicLoading(false);
+                })
+
+        } else {
+            toast({
+                title: "Please Select an Image!",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom",
+            });
+            setPicLoading(false);
+            return;
+        }
+    }
+
     return (
         <Flex
             minH="100vh"
@@ -192,6 +258,30 @@ function Register() {
                         color={"white"}
                     />
                     <Input
+                        type="file"
+                        name="Profile"
+                        accept="image/*"
+                        onChange={(e) => handleProfileUpload(e.target.files[0])}
+                        display="none"
+                        id="file-upload"
+                    />
+
+                    {/* Custom Button */}
+                    <Button
+                        isLoading={picLoading}
+                        as="label"
+                        htmlFor="file-upload"
+                        leftIcon={<FaUpload />}
+                        variant="solid"
+                        colorScheme="blue"
+                        size="lg"
+                        cursor="pointer"
+                        bg={"transparent"}
+
+                    >
+                        Upload Profile
+                    </Button>
+                    <Input
                         name="password"
                         placeholder="Password"
                         type="password"
@@ -202,6 +292,7 @@ function Register() {
                         bg={"transparent"}
                         color={"white"}
                     />
+
                     <Button
                         isLoading={loading}
                         colorScheme="blue"
