@@ -10,6 +10,7 @@ import { skills } from "../skills.js";
 
 import Rating from "../components/Rating.jsx";
 import { useAuthentication } from "../context/authContext.jsx";
+import { Template1, Template2, Template3 } from "../miscellaneous/ResumePreviewTemplates.jsx";
 
 
 const steps = [
@@ -472,6 +473,7 @@ function ResumeMaker() {
                 </Box>
 
                 {/* Right Side - Live Resume Preview */}
+
                 <ResumePreview formData={formData} resumeData={resumeData} themeColor={themeColor} />
             </HStack >
         </Box >

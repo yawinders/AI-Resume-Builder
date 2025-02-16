@@ -30,6 +30,19 @@ function Dashboard() {
     const toast = useToast();
 
     const handleAddResume = async () => {
+        if (newResumeName === "") {
+            toast({
+                title: "Enter the Name",
+                // description:"Name field Can't be empty",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+                position: "top"
+
+
+            })
+            return;
+        }
         try {
             setLoading(true)
             const user = JSON.parse(localStorage.getItem("userInfo"));
@@ -39,7 +52,7 @@ function Dashboard() {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             toast({
-                title: "Creted Successfully",
+                title: "Created Successfully",
                 status: "success",
                 duration: 5000,
                 isClosable: true,
@@ -111,6 +124,22 @@ function Dashboard() {
 
     }
 
+    const handleChoose = () => {
+        if (newResumeName === "") {
+            toast({
+                title: "Enter the Name",
+                // description:"Name field Can't be empty",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+                position: "top"
+
+
+            })
+            return;
+        }
+        navigate('/resume-templates')
+    }
     return (
         <Box p={6} bgGradient="linear(to-r, yellow.400, purple.600)" minH="100vh" color="white">
             <Heading mb={6} textAlign="center" fontSize="3xl">
@@ -189,18 +218,29 @@ function Dashboard() {
                     </ModalBody>
 
                     <ModalFooter justifyContent="center">
-                        <Button
-                            isLoading={loading}
-                            colorScheme="blue"
-                            size="lg"
-                            width="full"
-                            borderRadius="md"
-                            boxShadow="md"
-                            _hover={{ bg: "blue.600" }}
-                            onClick={handleAddResume}
+                        <Box
+                            display="flex"
+                            flexDir="column"
+                            gap="20px"
                         >
-                            Save Resume
-                        </Button>
+                            <Text>Choose the template OR Go with the Default one</Text>
+
+                            <Button colorScheme="orange" size="lg"
+                                onClick={handleChoose}
+                            >Choose</Button>
+                            <Button
+                                isLoading={loading}
+                                colorScheme="blue"
+                                size="lg"
+                                width="full"
+                                borderRadius="md"
+                                boxShadow="md"
+                                _hover={{ bg: "blue.600" }}
+                                onClick={handleAddResume}
+                            >
+                                Default
+                            </Button>
+                        </Box>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
