@@ -45,6 +45,16 @@ export const ResumeTemplateProvider = ({ children }) => {
             experience: prevData.experience.filter((_, i) => i !== index),
         }));
     };
+    const handleProjDelete = (index) => {
+        setFormData((prevData) => ({
+            ...prevData, projects: prevData.projects.filter((_, i) => i !== index)
+        }))
+    }
+    const handleEduDelete = (index) => {
+        setFormData((prevData) => ({
+            ...prevData, education: prevData.education.filter((_, i) => i !== index)
+        }))
+    }
     const handleGenerateJobSummary = async (prompt, section, index, field) => {
         try {
             setAiLoading(true)
@@ -85,7 +95,7 @@ export const ResumeTemplateProvider = ({ children }) => {
 
     }
     return (
-        <resumeTemplateContext.Provider value={{ choices, formData, handleChange, addMoreFields, setFormData, handleGenerateJobSummary, aiLoading, handleExpDelete }}>
+        <resumeTemplateContext.Provider value={{ choices, formData, handleChange, addMoreFields, setFormData, handleGenerateJobSummary, aiLoading, handleExpDelete, handleProjDelete, handleEduDelete }}>
             {children}
         </resumeTemplateContext.Provider>
     )

@@ -37,10 +37,13 @@ const steps = [
 function ChoosedResumeMaker() {
     const [step, setStep] = useState(0);
     const location = useLocation()
+    const resume = location.state?.resume;
+    console.log(resume);
+
     const choice = location.state?.selectedResume;
     // console.log((choice));
 
-    const { formData, handleChange, addMoreFields, setFormData, handleGenerateJobSummary, aiLoading, handleExpDelete } = useResumeContext();
+    const { formData, handleChange, addMoreFields, setFormData, handleGenerateJobSummary, aiLoading, handleExpDelete, handleProjDelete, handleEduDelete } = useResumeContext();
 
 
     return (
@@ -168,11 +171,22 @@ function ChoosedResumeMaker() {
                                         onChange={(e) => handleChange("projects", index, "to", e.target.value)}
                                     />
                                 </HStack>
+                                <Button
+                                    onClick={() => handleGenerateJobSummary(`generate only project description for project name ${proj.name} for duration of ${proj.from} to ${proj.to} of four lines of 7 words and each line starts with * mark  `, "projects", index, "description")}
+                                    color={'white'}
+                                    bgColor={'blue.900'}
+                                    isLoading={aiLoading}
+                                >
+                                    ♾️Generate From AI
+                                </Button>
                                 <Textarea
                                     placeholder="Project Description (Bullet Points)"
                                     value={proj.description}
                                     onChange={(e) => handleChange("projects", index, "description", e.target.value)}
                                 />
+                                <Button onClick={() => handleProjDelete(index)}>
+                                    Delete
+                                </Button>
                             </VStack>
                         ))}
                     {step === 3 && (
@@ -204,6 +218,9 @@ function ChoosedResumeMaker() {
                                     value={edu.degree}
                                     onChange={(e) => handleChange("education", index, "degree", e.target.value)}
                                 />
+                                <Button onClick={() => handleEduDelete(index)}>
+                                    Delete
+                                </Button>
                             </VStack>
                         ))}
                     {step === 4 && <Button onClick={() => addMoreFields("education", { college: "", year: "", percentage: "", degree: "" })}>Add More Education</Button>}

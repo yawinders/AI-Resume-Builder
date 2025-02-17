@@ -13,6 +13,8 @@ import resumeThumbaNail from "../assets/resume thumbnail.webp"
 function Dashboard() {
     const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
     const [resumes, setResumes] = useState([]);
+    const [chooseResumes, setChooseResumes] = useState([])
+    const [chooseDelLoading, setChooseDelLoading] = useState(false)
     // const resume = useState([])
     // console.log(resume);
 
@@ -24,7 +26,7 @@ function Dashboard() {
     const { user, pic, setUser } = useContext(AuthContext)
     // console.log(pic);
 
-    console.log(user);
+    // console.log(user);
 
 
     const toast = useToast();
@@ -48,7 +50,7 @@ function Dashboard() {
             const user = JSON.parse(localStorage.getItem("userInfo"));
 
             const newResume = { userId: user.userId, resumeName: newResumeName };
-            await axios.post("http://localhost:5000/api/resume/create", newResume, {
+            await axios.post(`${API_BASE_URL}/api/resume/create`, newResume, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             toast({
@@ -88,6 +90,25 @@ function Dashboard() {
         }
     }, [navigate, loading, delLoading]);
 
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("userInfo"));
+        if (!user) {
+            navigate("/login");
+        } else {
+
+            // console.log(user);
+            // Fetch saved resumes
+            axios.get(`${API_BASE_URL}/api/resume/c-resume/${user.userId}`, {
+                headers: { Authorization: `Bearer ${user.token}` }
+            }).then(response => {
+                // console.log(response.data);
+
+                setChooseResumes(response.data);
+            }).catch(() => {
+                navigate("/login");
+            });
+        }
+    }, [navigate, chooseDelLoading])
     const handleEditClick = (resume) => {
         navigate('/create-resume', { state: { resume } })
     }
@@ -98,7 +119,7 @@ function Dashboard() {
 
         try {
 
-            await axios.delete(`http://localhost:5000/api/resume/delete/${resumeId}`, {
+            await axios.delete(`${API_BASE_URL}/api/resume/delete/${resumeId}`, {
                 headers: { Authorization: `Bearer ${user.token}` }
             })
             toast({
@@ -123,22 +144,59 @@ function Dashboard() {
         }
 
     }
+    const handleChooseResumeDelete = async (e, resumeId) => {
+        setChooseDelLoading(true)
+        e.stopPropagation()
+        // console.log(resumeId);
 
-    const handleChoose = () => {
+        try {
+
+            await axios.delete(`${API_BASE_URL}/api/resume/delete-c-resume/${resumeId}`, {
+                headers: { Authorization: `Bearer ${user.token}` }
+            })
+            toast({
+                title: "Resume Deleted",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+                position: "top-right"
+            })
+            setChooseDelLoading(false)
+        } catch (error) {
+            setChooseDelLoading(false)
+            console.log(error);
+            toast({
+                title: "Something went wrong",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "top-right"
+            })
+
+        }
+    }
+
+    const handleChoose = async () => {
+        // setChooseLoader(true)
         if (newResumeName === "") {
             toast({
                 title: "Enter the Name",
-                // description:"Name field Can't be empty",
+
                 status: "warning",
                 duration: 5000,
                 isClosable: true,
                 position: "top"
-
-
             })
             return;
         }
-        navigate('/resume-templates')
+
+
+        navigate('/resume-templates', { state: { newResumeName } })
+    }
+
+    const handleChooseEditClick = (resume) => {
+        const selectedResume = resume.templateName;
+        navigate('/choosed-resume-maker', { state: { selectedResume, resume } })
     }
     return (
         <Box p={6} bgGradient="linear(to-r, yellow.400, purple.600)" minH="100vh" color="white">
@@ -176,6 +234,38 @@ function Dashboard() {
                         <Text fontSize="lg">No resumes created yet.</Text>
                     </VStack>
                 )}
+                {chooseResumes.length > 0 ? (
+                    chooseResumes.map((resume, index) => (
+                        <Box
+                            key={index}
+                            p={4}
+                            bg="white"
+                            borderRadius="md"
+                            textAlign="center"
+                            color="gray.800"
+                            boxShadow="lg"
+                            transition="0.3s"
+                            _hover={{ transform: "scale(1.05)" }}
+                            cursor="pointer"
+                            onClick={() => handleChooseEditClick(resume)}
+                        >
+                            <Box h="250px" bg="gray.200" borderRadius="md" mb={4} display="flex" alignItems="center" justifyContent="center">
+                                <Image src={resumeThumbaNail} w="100%" height="100%" />
+                                {/* <Icon as={FaFileAlt} boxSize={12} color="gray.500" /> */}
+                            </Box>
+                            <Heading size="md">{resume.resumeName}  <IconButton isLoading={chooseDelLoading} onClick={(e) => handleChooseResumeDelete(e, resume._id)}
+                                icon={<DeleteIcon />} /></Heading>
+
+                        </Box>
+                    ))
+                ) : (
+                    <VStack w="full" spacing={4}>
+                        <Image src="/no-data.png" boxSize="150px" alt="" />
+                        <Text fontSize="lg">No resumes created yet.</Text>
+                    </VStack>
+                )}
+
+
 
                 <Button
                     onClick={onOpen}
