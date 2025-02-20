@@ -1,5 +1,8 @@
-import { Box, Flex, Heading, Text, VStack, HStack, Divider, Icon, List, ListItem, ListIcon } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, VStack, HStack, Divider, Icon, List, ListItem, ListIcon, Button } from "@chakra-ui/react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaBriefcase, FaProjectDiagram, FaGraduationCap, FaTools, FaHeart, FaLanguage, FaCheckCircle, FaStar, FaFile, FaCommentDots } from "react-icons/fa";
+import { downloadResumeAsPDF } from "./DownlaoadResumePdf";
+import { useRef, useState } from "react";
+import { useAuthentication } from "../context/authContext";
 
 const resumeData = {
     name: "John Doe",
@@ -58,124 +61,141 @@ const resumeData = {
     languages: ["English", "Spanish"]
 };
 
-export const Template1 = ({ formData }) => {
-    return (
-        <Box width="100%" height="100%" bgGradient="linear(to-b, teal.100, blue.100)" p={8} m="auto" boxShadow="lg" borderRadius="md" border="1px solid gray">
-            <VStack align="start" spacing={2} mb={4}>
-                <Heading size="lg" color="blue.700">{formData?.personalInfo.name || resumeData.name}</Heading>
-                <Text fontSize="md" color="gray.600">{formData?.personalInfo.role || resumeData.jobTitle}</Text>
-            </VStack>
-            <Divider mb={4} />
-            <VStack align="start" spacing={2} mb={4}>
-                <HStack><Icon as={FaMapMarkerAlt} color="red.500" /><Text>{formData?.personalInfo.address || resumeData.address}</Text></HStack>
-                <HStack><Icon as={FaPhone} color="green.500" /><Text>{formData?.personalInfo.phone || resumeData.mobile}</Text></HStack>
-                <HStack><Icon as={FaEnvelope} color="blue.500" /><Text>{formData?.personalInfo.email || resumeData.email}</Text></HStack>
-            </VStack>
-            <Divider mb={4} />
-            <Heading size="md" mb={2} color="purple.700">Professional Summary</Heading>
-            <Text fontSize="sm" mb={4}>{formData?.summary || resumeData.summary}</Text>
-            <Heading size="md" mb={2} color="purple.700">Professional Experience</Heading>
-            {formData ? (<>
-                {formData.experience.map((exp, i) => (
-                    <Box key={i} p={2} mb={3} bg="gray.100" borderRadius="md">
-                        <Text fontWeight="bold">{exp.role} at {exp.company}</Text>
-                        <Text fontSize="sm" color="gray.500">{exp.duration}</Text>
-                        <List spacing={1} mt={2}>
-                            {exp.details.split('*').map((desc, j) => {
-                                if (j === 0) return
-                                return <ListItem key={j}><ListIcon as={FaCheckCircle} color="green.500" /> {desc}</ListItem>
-                            })}
-                        </List>
-                    </Box>
-                ))}
-            </>) : (<>
-                {resumeData.experience.map((exp, i) => (
+export const Template1 = ({ formData, resume, resumeRef }) => {
+    console.log("formddta", formData);
+    console.log("resume", resume);
+    // const resumeRef = useRef(null)
+    // const [loading, setLoading] = useState(false)
 
+    return (
+        <>
+
+
+            <Box
+                ref={resumeRef && resumeRef}
+                width="100%" height="100%" bgGradient="linear(to-b, teal.100, blue.100)" p={8} m="auto" boxShadow="lg" borderRadius="md" border="1px solid gray">
+                <VStack align="start" spacing={2} mb={4}>
+                    <Heading size="lg" color="blue.700">{formData?.personalInfo.name || resumeData.name}</Heading>
+                    <Text fontSize="md" color="gray.600">{formData?.personalInfo.role || resumeData.jobTitle}</Text>
+                </VStack>
+                <Divider mb={4} />
+                <VStack align="start" spacing={2} mb={4}>
+                    <HStack><Icon as={FaMapMarkerAlt} color="red.500" /><Text>{formData?.personalInfo.address || resumeData.address}</Text></HStack>
+                    <HStack><Icon as={FaPhone} color="green.500" /><Text>{formData?.personalInfo.phone || resumeData.mobile}</Text></HStack>
+                    <HStack><Icon as={FaEnvelope} color="blue.500" /><Text>{formData?.personalInfo.email || resumeData.email}</Text></HStack>
+                </VStack>
+                <Divider mb={4} />
+                <Heading size="md" mb={2} color="purple.700">Professional Summary</Heading>
+                <Text fontSize="sm" mb={4}>{formData?.summary || resumeData.summary}</Text>
+                <Heading size="md" mb={2} color="purple.700">Professional Experience</Heading>
+                {formData ? (
+                    <>
+                        {formData.experience?.map((exp, i) => (
+                            <Box key={i} p={2} mb={3} bg="gray.100" borderRadius="md">
+                                <Text fontWeight="bold">{exp.role} at {exp.company}</Text>
+                                <Text fontSize="sm" color="gray.500">{exp.duration}</Text>
+                                <List spacing={1} mt={2}>
+                                    {(exp.details?.split('*') || []).map((desc, j) => {
+                                        if (j === 0) return null;
+                                        return <ListItem key={j}><ListIcon as={FaCheckCircle} color="green.500" /> {desc}</ListItem>;
+                                    })}
+                                </List>
+                            </Box>
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        {resumeData.experience?.map((exp, i) => (
+                            <Box key={i} p={2} mb={3} bg="gray.100" borderRadius="md">
+                                <Text fontWeight="bold">{exp.role} at {exp.company}</Text>
+                                <Text fontSize="sm" color="gray.500">{exp.duration}</Text>
+                                <List spacing={1} mt={2}>
+                                    {exp.description?.map((desc, j) => (
+                                        <ListItem key={j}><ListIcon as={FaCheckCircle} color="green.500" /> {desc}</ListItem>
+                                    ))}
+                                </List>
+                            </Box>
+                        ))}
+                    </>
+                )}
+
+
+                <Divider mb={4} />
+                <Heading size="md" mb={2} color="purple.700">Projects</Heading>
+                {formData ? (<>
+                    {formData.projects.map((proj, i) => {
+                        return <Box key={i} p={2} mb={3} bg="gray.100" borderRadius="md">
+                            <Box display="flex" justifyContent="space-between">
+                                <Text fontWeight="bold">{proj.name}</Text>
+                                <Text fontWeight="bold">{`${proj.from}`}</Text>
+                            </Box>
+                            <List spacing={1} mt={2}>
+                                {proj.description.split("*").map((desc, j) => {
+                                    if (j === 0) return
+                                    return <ListItem key={j}><ListIcon as={FaCheckCircle} color="blue.500" /> {desc}</ListItem>
+                                })}
+                            </List>
+                        </Box>
+                    })}
+                </>) : (<>{resumeData.projects.map((proj, i) => (
                     <Box key={i} p={2} mb={3} bg="gray.100" borderRadius="md">
-                        <Text fontWeight="bold">{exp.role} at {exp.company}</Text>
-                        <Text fontSize="sm" color="gray.500">{exp.duration}</Text>
+                        <Text fontWeight="bold">{proj.title}</Text>
                         <List spacing={1} mt={2}>
-                            {exp.description.map((desc, j) => (
-                                <ListItem key={j}><ListIcon as={FaCheckCircle} color="green.500" /> {desc}</ListItem>
+                            {proj.description.map((desc, j) => (
+                                <ListItem key={j}><ListIcon as={FaCheckCircle} color="blue.500" /> {desc}</ListItem>
                             ))}
                         </List>
                     </Box>
+                ))}</>)}
 
-                ))}  </>)}
+                <Divider mb={4} />
+                <Heading size="md" mb={2} color="purple.700">Education</Heading>
+                {formData ? (<>
+                    {formData.education.map((edu, i) => {
+                        return <Text key={i} fontSize="sm">{`${edu.degree}, ${edu.college} (${edu.year})-${edu.percentage}%` || resumeData.education}</Text>
+                    })}
 
+                </>) : (<><Text fontSize="sm">{resumeData.education}</Text></>)}
 
-            <Divider mb={4} />
-            <Heading size="md" mb={2} color="purple.700">Projects</Heading>
-            {formData ? (<>
-                {formData.projects.map((proj, i) => {
-                    return <Box key={i} p={2} mb={3} bg="gray.100" borderRadius="md">
-                        <Box display="flex" justifyContent="space-between">
-                            <Text fontWeight="bold">{proj.name}</Text>
-                            <Text fontWeight="bold">{`${proj.from}`}</Text>
-                        </Box>
-                        <List spacing={1} mt={2}>
-                            {proj.description.split("*").map((desc, j) => {
-                                if (j === 0) return
-                                return <ListItem key={j}><ListIcon as={FaCheckCircle} color="blue.500" /> {desc}</ListItem>
-                            })}
-                        </List>
+                <Divider mb={4} />
+                <Flex justify="space-between">
+                    <Box>
+                        <Heading size="md" mb={2} color="purple.700">Skills</Heading>
+                        {formData ? (<>
+                            {formData.skills.map((skill, i) => (<Text fontSize="sm" key={i}>• {skill}</Text>))}
+                        </>) : (<>
+                            {resumeData.skills.map((skill, i) => <Text fontSize="sm" key={i}>• {skill}</Text>)}
+                        </>)}
+
                     </Box>
-                })}
-            </>) : (<>{resumeData.projects.map((proj, i) => (
-                <Box key={i} p={2} mb={3} bg="gray.100" borderRadius="md">
-                    <Text fontWeight="bold">{proj.title}</Text>
-                    <List spacing={1} mt={2}>
-                        {proj.description.map((desc, j) => (
-                            <ListItem key={j}><ListIcon as={FaCheckCircle} color="blue.500" /> {desc}</ListItem>
-                        ))}
-                    </List>
-                </Box>
-            ))}</>)}
+                    <Box>
+                        <Heading size="md" mb={2} color="purple.700">Hobbies</Heading>
+                        {formData ? (<>
+                            {formData.hobbies.split(', ').map((hobby, i) => <Text fontSize="sm" key={i}>• {hobby}</Text>)}
+                        </>) : (<> {resumeData.hobbies.map((hobby, i) => <Text fontSize="sm" key={i}>• {hobby}</Text>)}</>)}
 
-            <Divider mb={4} />
-            <Heading size="md" mb={2} color="purple.700">Education</Heading>
-            {formData ? (<>
-                {formData.education.map((edu, i) => {
-                    return <Text key={i} fontSize="sm">{`${edu.degree}, ${edu.college} (${edu.year})-${edu.percentage}%` || resumeData.education}</Text>
-                })}
+                    </Box>
+                    <Box>
+                        <Heading size="md" mb={2} color="purple.700">Languages</Heading>
+                        {formData ? (<>
+                            {formData.languages.split(", ").map((lang, i) => <Text fontSize="sm" key={i}>• {lang}</Text>)}
+                        </>) : (<>{resumeData.languages.map((lang, i) => <Text fontSize="sm" key={i}>• {lang}</Text>)}</>)}
 
-            </>) : (<><Text fontSize="sm">{resumeData.education}</Text></>)}
-
-            <Divider mb={4} />
-            <Flex justify="space-between">
-                <Box>
-                    <Heading size="md" mb={2} color="purple.700">Skills</Heading>
-                    {formData ? (<>
-                        {formData.skills.map((skill, i) => (<Text fontSize="sm" key={i}>• {skill}</Text>))}
-                    </>) : (<>
-                        {resumeData.skills.map((skill, i) => <Text fontSize="sm" key={i}>• {skill}</Text>)}
-                    </>)}
-
-                </Box>
-                <Box>
-                    <Heading size="md" mb={2} color="purple.700">Hobbies</Heading>
-                    {formData ? (<>
-                        {formData.hobbies.split(', ').map((hobby, i) => <Text fontSize="sm" key={i}>• {hobby}</Text>)}
-                    </>) : (<> {resumeData.hobbies.map((hobby, i) => <Text fontSize="sm" key={i}>• {hobby}</Text>)}</>)}
-
-                </Box>
-                <Box>
-                    <Heading size="md" mb={2} color="purple.700">Languages</Heading>
-                    {formData ? (<>
-                        {formData.languages.split(", ").map((lang, i) => <Text fontSize="sm" key={i}>• {lang}</Text>)}
-                    </>) : (<>{resumeData.languages.map((lang, i) => <Text fontSize="sm" key={i}>• {lang}</Text>)}</>)}
-
-                </Box>
-            </Flex>
-        </Box>
+                    </Box>
+                </Flex>
+            </Box>
+        </>
     );
 };
 
 
 
-export const Template2 = ({ formData }) => {
+export const Template2 = ({ formData, resume, resumeRef }) => {
+    console.log("formddta", formData);
+    console.log("resume", resume);
     return (
         <Box
+            ref={resumeRef}
             width="100%" height="100%"
             bgGradient="linear(to-b, purple.100, pink.100)"
             boxShadow="2xl"
@@ -322,35 +342,39 @@ export const Template2 = ({ formData }) => {
     );
 };
 
-export const Template3 = ({ formData }) => {
+export const Template3 = ({ formData, resume, resumeRef }) => {
+    console.log("formddta", formData);
+    console.log("resume", resume);
+
     return (
-        <Box width="100%" height="100%" p={8} bgGradient="linear(to-r, teal.200, blue.300)" boxShadow="2xl" borderRadius="10px" m="auto" >
+        <Box
+            ref={resumeRef}
+            width="100%" height="100%" p={8} bgGradient="linear(to-r, teal.200, blue.300)" boxShadow="2xl" borderRadius="10px" m="auto" >
             <Flex>
                 {/* Left Section */}
                 <Box w="40%" bg="teal.700" color="white" p={6} borderRadius="10px 0 0 10px">
                     <VStack align="start" spacing={6}>
-                        <Text fontSize="2xl" fontWeight="bold">{formData?.personalInfo.name || "Emily Johnson"}</Text>
-                        <Text fontSize="lg">{formData?.personalInfo.role || "Software Engineer"}</Text>
+                        <Text fontSize="2xl" fontWeight="bold">{formData?.personalInfo.name || resume?.personalInfo.name || "Emily Johnson"}</Text>
+                        <Text fontSize="lg">{formData?.personalInfo.role || resume?.personalInfo.role || "Software Engineer"}</Text>
                         <Divider borderColor="whiteAlpha.600" />
                         <VStack align="start" spacing={2}>
-                            <HStack><Icon as={FaMapMarkerAlt} /><Text>{formData?.personalInfo.address || "San Francisco, USA"}</Text></HStack>
-                            <HStack><Icon as={FaPhone} /><Text>{formData?.personalInfo.phone || "+1 456 789 1234"}</Text></HStack>
-                            <HStack><Icon as={FaEnvelope} /><Text>{formData?.personalInfo.email || "emily.johnson@example.com"}</Text></HStack>
+                            <HStack><Icon as={FaMapMarkerAlt} /><Text>{formData?.personalInfo.address || resume?.personalInfo.address || "San Francisco, USA"}</Text></HStack>
+                            <HStack><Icon as={FaPhone} /><Text>{formData?.personalInfo.phone || resume?.personalInfo.phone || "+1 456 789 1234"}</Text></HStack>
+                            <HStack><Icon as={FaEnvelope} /><Text>{formData?.personalInfo.email || resume?.personalInfo.email || "emily.johnson@example.com"}</Text></HStack>
                         </VStack>
                         <Divider borderColor="whiteAlpha.600" />
                         <Box>
                             <Text fontSize="xl" fontWeight="bold" color="white"><Icon as={FaGraduationCap} mr={2} />Education</Text>
                             {formData ? (
                                 <>
-                                    {
-                                        formData.education.map((edu, idx) => {
-                                            return (
-                                                <VStack p={4} borderRadius="10px" boxShadow="md" key={idx}>
-                                                    <Text fontWeight="semibold">{`${edu.degree} | ${edu.college} (${edu.year})-(${edu.percentage}%)` || "B.S. in Computer Science | Stanford University (2014 - 2018)"}</Text>
-                                                </VStack>
-                                            )
-                                        })
-                                    }
+                                    {(formData?.education || resume?.education).map((edu, idx) => (
+                                        <VStack p={4} borderRadius="10px" boxShadow="md" key={idx}>
+                                            <Text fontWeight="semibold">
+                                                {`${edu.degree} | ${edu.college} (${edu.year}) - (${edu.percentage}%)` ||
+                                                    "B.S. in Computer Science | Stanford University (2014 - 2018)"}
+                                            </Text>
+                                        </VStack>
+                                    ))}
 
                                 </>
                             ) : (<>
@@ -365,7 +389,7 @@ export const Template3 = ({ formData }) => {
                         <List spacing={2}>
                             {formData ? (
                                 <>
-                                    {formData.skills.map((skill, idx) => <ListItem>{skill}</ListItem>)}
+                                    {formData.skills.map((skill, idx) => <ListItem key={idx}>{skill}</ListItem>)}
                                 </>
                             ) : (<>
                                 <ListItem>React</ListItem>

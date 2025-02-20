@@ -13,6 +13,7 @@ import ResumeTemplates from './pages/ResumeTemplates.jsx';
 import { ResumeTemplateProvider } from './context/resumeTemplateContext.jsx';
 import { Template1, Template2, Template3 } from './miscellaneous/ResumePreviewTemplates.jsx';
 import ChoosedResumeMaker from './pages/ChoosedResumeMaker.jsx';
+import ChoosedResumePreview from './components/ChoosedResumePreview.jsx';
 
 function App() {
   // useLocation needs to be inside the Router context
@@ -35,6 +36,7 @@ function App() {
           <Route path='/resume-preview' element={<protectedRoutes><ResumePreview /></protectedRoutes>} />
           <Route path='/resume-templates' element={<protectedRoutes><ResumeTemplates /></protectedRoutes>} />
           <Route path="/choosed-resume-maker" element={<protectedRoutes><ChoosedResumeMaker /></protectedRoutes>} />
+          <Route path="//choosed-preview" element={<protectedRoutes><ChoosedResumePreview /></protectedRoutes>} />
 
         </Routes>
       </ResumeTemplateProvider>

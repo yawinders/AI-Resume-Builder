@@ -11,13 +11,20 @@ export const useResumeContext = () => {
     return result;
 }
 export const ResumeTemplateProvider = ({ children }) => {
+
+    const [chooseResumes, setChooseResumes] = useState([])
     const [aiLoading, setAiLoading] = useState(false)
     const [choices, setChoices] = useState(['Template1', 'Template2', 'Template3'])
     const navigate = useNavigate()
     const { user } = useAuthentication()
+    // console.log(chooseResumes);
+    const [loading, setLoading] = useState(false)
+
 
     const [formData, setFormData] = useState({
-        personalInfo: { name: "", email: "", phone: "", address: "", role: "" },
+        personalInfo: {
+            name: "", email: "", phone: "", address: "", role: ""
+        },
         summary: "",
         experience: [{ company: "", duration: "", role: "", details: "" }],
         projects: [{ name: "", from: "", to: "", description: "" }],
@@ -95,7 +102,7 @@ export const ResumeTemplateProvider = ({ children }) => {
 
     }
     return (
-        <resumeTemplateContext.Provider value={{ choices, formData, handleChange, addMoreFields, setFormData, handleGenerateJobSummary, aiLoading, handleExpDelete, handleProjDelete, handleEduDelete }}>
+        <resumeTemplateContext.Provider value={{ choices, formData, handleChange, addMoreFields, setFormData, handleGenerateJobSummary, aiLoading, handleExpDelete, handleProjDelete, handleEduDelete, chooseResumes, setChooseResumes, loading, setLoading }}>
             {children}
         </resumeTemplateContext.Provider>
     )

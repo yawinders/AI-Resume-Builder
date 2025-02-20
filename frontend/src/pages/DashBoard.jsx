@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Box, Button, Grid, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Input, Image, VStack, Text, Icon, useDisclosure, IconButton, useToast, ModalFooter } from "@chakra-ui/react";
-import { FaPlus, FaFileAlt, FaRegFileAlt } from "react-icons/fa";
+import { FaPlus, FaFileAlt, FaRegFileAlt, FaAcquisitionsIncorporated } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CircleCanvas from "../miscellaneous/RotatingCircle";
@@ -9,21 +9,24 @@ import WelcomeMessage from "../miscellaneous/WelcomeMessage";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { AuthContext } from "../context/authContext";
 import resumeThumbaNail from "../assets/resume thumbnail.webp"
+import { useResumeContext } from "../context/resumeTemplateContext";
 
 function Dashboard() {
     const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+    // const [chooseResumes, setChooseResumes] = useState([])
     const [resumes, setResumes] = useState([]);
-    const [chooseResumes, setChooseResumes] = useState([])
     const [chooseDelLoading, setChooseDelLoading] = useState(false)
     // const resume = useState([])
     // console.log(resume);
 
     const [newResumeName, setNewResumeName] = useState("");
-    const [loading, setLoading] = useState(false)
+    const [createdloading, setCreatedLoading] = useState(false)
     const [delLoading, setDelLoading] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure();
     const navigate = useNavigate();
     const { user, pic, setUser } = useContext(AuthContext)
+    const { loading, setLoading, chooseResumes, setChooseResumes, formData, setFormData } = useResumeContext()
     // console.log(pic);
 
     // console.log(user);
@@ -46,7 +49,7 @@ function Dashboard() {
             return;
         }
         try {
-            setLoading(true)
+            setCreatedLoading(true)
             const user = JSON.parse(localStorage.getItem("userInfo"));
 
             const newResume = { userId: user.userId, resumeName: newResumeName };
@@ -60,12 +63,12 @@ function Dashboard() {
                 isClosable: true,
                 position: "top-right"
             })
-            setLoading(false)
+            setCreatedLoading(false)
             setResumes([...resumes, { name: newResumeName }]);
             setNewResumeName("");
             onClose();
         } catch (error) {
-            setLoading(false)
+            setCreatedLoading(false)
             console.error(error);
         }
     };
@@ -88,7 +91,7 @@ function Dashboard() {
                 navigate("/login");
             });
         }
-    }, [navigate, loading, delLoading]);
+    }, [navigate, createdloading, delLoading]);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("userInfo"));
@@ -108,7 +111,7 @@ function Dashboard() {
                 navigate("/login");
             });
         }
-    }, [navigate, chooseDelLoading])
+    }, [navigate, loading, chooseDelLoading])
     const handleEditClick = (resume) => {
         navigate('/create-resume', { state: { resume } })
     }
@@ -196,10 +199,11 @@ function Dashboard() {
 
     const handleChooseEditClick = (resume) => {
         const selectedResume = resume.templateName;
+        // setFormData({})
         navigate('/choosed-resume-maker', { state: { selectedResume, resume } })
     }
     return (
-        <Box p={6} bgGradient="linear(to-r, yellow.400, purple.600)" minH="100vh" color="white">
+        <Box p={6} bgGradient="linear-gradient(135deg, #232526, #414345);" minH="100vh" color="white">
             <Heading mb={6} textAlign="center" fontSize="3xl">
                 Your Resumes <WelcomeMessage />
             </Heading>
@@ -230,7 +234,7 @@ function Dashboard() {
                     ))
                 ) : (
                     <VStack w="full" spacing={4}>
-                        <Image src="/no-data.png" boxSize="150px" alt="" />
+                        <Icon as={FaAcquisitionsIncorporated} boxSize="150px" color="gray.400" />
                         <Text fontSize="lg">No resumes created yet.</Text>
                     </VStack>
                 )}
@@ -259,10 +263,7 @@ function Dashboard() {
                         </Box>
                     ))
                 ) : (
-                    <VStack w="full" spacing={4}>
-                        <Image src="/no-data.png" boxSize="150px" alt="" />
-                        <Text fontSize="lg">No resumes created yet.</Text>
-                    </VStack>
+                    null
                 )}
 
 
@@ -319,7 +320,7 @@ function Dashboard() {
                                 onClick={handleChoose}
                             >Choose</Button>
                             <Button
-                                isLoading={loading}
+                                isLoading={createdloading}
                                 colorScheme="blue"
                                 size="lg"
                                 width="full"

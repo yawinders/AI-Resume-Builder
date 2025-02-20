@@ -121,7 +121,13 @@ function ResumePreview({ formData, themeColor }) {
                         </Flex>
                         <Text>{formData?.company || resumeData?.company}</Text>
                     </Box>
-                    <Text>{formData?.experience || resumeData?.experience}</Text>
+                    <ul style={{ marginLeft: "10px" }}>{formData?.experience?.split('*').map((d, i) => {
+                        if (i === 0) return null;
+                        return <li key={i}>{d}</li>
+                    }) || resumeData?.experience?.split('*').map((d, i) => {
+                        if (i === 0) return null;
+                        return <li key={i}>{d}</li>
+                    })}</ul>
 
                     {/* Education Preview */}
                     {(formData?.education?.length > 0 || resumeData?.education?.length > 0) && (
@@ -158,7 +164,7 @@ function ResumePreview({ formData, themeColor }) {
                         {(formData?.skills || resumeData?.skills || []).map((obj, i) => (
                             <Box key={i}>
                                 <Text>
-                                    <strong>{obj.name} </strong>
+                                    <strong>{obj?.name} </strong>
                                 </Text>
                                 <FilledBar rating={obj.rating} themeColor={themeColor || resumeData.themeColor} />
                             </Box>

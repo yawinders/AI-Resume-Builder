@@ -55,3 +55,25 @@ export const deleteChooseResume = async (req, res) => {
     }
 
 }
+export const getChoosedResume = async (req, res) => {
+    const { resumeId } = req.params;
+    // console.log("Requested Resume ID:", resumeId);
+
+    // Validate ObjectId format before querying
+    if (!mongoose.Types.ObjectId.isValid(resumeId)) {
+        return res.status(400).json({ error: "Invalid Resume ID format" });
+    }
+
+    try {
+        const resume = await ChooseResume.findById(resumeId);
+
+        if (!resume) {
+            return res.status(404).json({ error: "Resume Not Found" });
+        }
+
+        res.status(200).json(resume);
+    } catch (error) {
+        console.error("Error fetching resume:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};

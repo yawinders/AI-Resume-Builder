@@ -1,9 +1,11 @@
 import React from "react";
-import { Box, Flex, Heading, Spacer, Button, HStack, IconButton, useDisclosure, Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Avatar, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { Box, Flex, Heading, Spacer, Button, HStack, IconButton, useDisclosure, Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Avatar, Menu, MenuButton, MenuList, MenuItem, Image } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { useAuthentication } from "../context/authContext";
 import ProfileModal from "../miscellaneous/ProfileModal";
+import { useResumeContext } from "../context/resumeTemplateContext";
+import Logo from '../assets/logo.webp'
 
 function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -19,6 +21,7 @@ function Navbar() {
         localStorage.removeItem("userInfo");
         navigate("/login");
     };
+    const { formData, setFormData } = useResumeContext()
 
     return (
         <Box
@@ -31,9 +34,13 @@ function Navbar() {
             zIndex="1000"
         >
             <Flex align="center">
-                <Heading size="lg" fontWeight="bold" fontFamily="Poppins, sans-serif">
+                <Heading size="lg" fontWeight="bold" fontFamily="Poppins, sans-serif" display="flex" gap={5} alignItems="center">
+                    <Box boxSize='sm' w="75px" h="auto" borderRadius="50%" overflow="hidden" border="2px solid white">
+                        <Image src={Logo} />
+                    </Box>
                     <Link to="/dashboard" _hover={{ textDecoration: "none", color: "cyan.300" }}>
                         AI Resume Builder
+
                     </Link>
                 </Heading>
                 <Spacer />
@@ -52,7 +59,7 @@ function Navbar() {
                                     My Profile
                                 </ProfileModal>
                             </MenuItem>
-                            <MenuItem color={"black"} onClick={handleLogout}>Logout</MenuItem>
+                            {/* <MenuItem color={"black"} onClick={handleLogout}>Logout</MenuItem> */}
                         </MenuList>
                     </Menu>
                     <Button
@@ -102,6 +109,7 @@ function Navbar() {
                                 variant="ghost" color="white"
                                 _hover={{ bg: "whiteAlpha.300", transform: "scale(1.1)" }}
                                 w="100%"
+
                             >
                                 Dashboard
                             </Button>

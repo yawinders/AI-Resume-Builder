@@ -214,11 +214,11 @@ function ResumeMaker() {
     // console.log(formData);
 
     return (
-        <Box bgGradient="linear(to-r, blue.400, purple.600)" minHeight="100vh">
+        <Box bgGradient="linear-gradient(135deg, #232526, #414345);" minHeight="100vh">
             <HStack spacing={12} align="stretch" p={6} flexWrap="wrap">
-                <Icon cursor={"pointer"} as={FaHome} mr={2} fontSize="3rem" onClick={() => navigate('/dashboard')} />
+                <Icon color={"white"} cursor={"pointer"} as={FaHome} mr={2} fontSize="3rem" onClick={() => navigate('/dashboard')} />
                 <Box display="flex" w={["40%", "40%", "50%"]} justifyContent="space-between" gap="100px">
-                    <Icon as={FaPallet} mr={2} fontSize="3rem" cursor={"pointer"} onClick={() => setShowPalette(!showPalette)} />
+                    <Icon color={"white"} as={FaPallet} mr={2} fontSize="3rem" cursor={"pointer"} onClick={() => setShowPalette(!showPalette)} />
                     {showPalette && (
                         <Flex
                             bg="white"

@@ -1,6 +1,6 @@
 import express from "express";
 import { createResume, deleteResume, getResume, getUserResumes, updateResume } from "../controllers/resumeController.js";
-import { createChooseResume, deleteChooseResume, getUserChooseResumes, updateChooseResume } from "../controllers/chooseResumeController.js";
+import { createChooseResume, deleteChooseResume, getChoosedResume, getUserChooseResumes, updateChooseResume } from "../controllers/chooseResumeController.js";
 
 
 const router = express.Router()
@@ -17,7 +17,7 @@ router.post('/create-c-resume', createChooseResume)
 router.post('/update-c-resume', updateChooseResume)
 router.get("/c-resume/:userId", getUserChooseResumes)
 router.delete("/delete-c-resume/:resumeId", deleteChooseResume)
-// router.get('c-resume/:resumeId', getResume)
+router.get('c-resume/:resumeId', getChoosedResume)
 
 
 export default router;
