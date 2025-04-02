@@ -235,7 +235,7 @@ function Dashboard() {
                 ) : (
                     <VStack w="full" spacing={4}>
                         <Icon as={FaAcquisitionsIncorporated} boxSize="150px" color="gray.400" />
-                        <Text fontSize="lg">No resumes created yet.</Text>
+                        <Text fontSize="lg">No Default resumes created yet.</Text>
                     </VStack>
                 )}
                 {chooseResumes.length > 0 ? (

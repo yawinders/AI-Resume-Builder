@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Box, Input, Button, Heading, VStack, Text, useToast, Flex, Image, useColorModeValue, Icon, InputLeftElement, InputGroup } from "@chakra-ui/react";
+import { Box, Input, Button, Heading, VStack, Text, useToast, Flex, Image, useColorModeValue, Icon, InputLeftElement, InputGroup, InputRightElement } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaEnvelope, FaLock, FaPenFancy, FaRobot, FaUser } from "react-icons/fa";
+import { FaEnvelope, FaEye, FaEyeSlash, FaLock, FaPenFancy, FaRobot, FaUser } from "react-icons/fa";
 import { keyframes } from "framer-motion";
 import CircleCanvas from "../miscellaneous/RotatingCircle.jsx";
 import RotatingGears from "../miscellaneous/RotatingGears.jsx";
@@ -19,7 +19,10 @@ function Login({ setToken }) {
     const cardBgColor = useColorModeValue('white', 'gray.800');
     const navigate = useNavigate();
     const toast = useToast()
-
+    const [showPass, setShowPass] = useState(false)
+    const handleEyeClick = () => {
+        setShowPass(!showPass)
+    }
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -156,12 +159,15 @@ function Login({ setToken }) {
                         <Input
                             name="password"
                             placeholder="Password"
-                            type="password"
+                            type={showPass ? "text" : "password"}
                             onChange={handleChange}
                             focusBorderColor="blue.400"
                             bg="white"
                             borderRadius="md"
                         />
+                        <InputRightElement >
+                            {showPass ? <Icon cursor={"pointer"} onClick={handleEyeClick} as={FaEyeSlash} color="gray.300" /> : <Icon cursor={"pointer"} onClick={handleEyeClick} as={FaEye} color="gray.300" />}
+                        </InputRightElement>
                     </InputGroup>
 
                     {/* Login Button with Gradient Effect */}
