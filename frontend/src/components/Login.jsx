@@ -63,6 +63,10 @@ function Login({ setToken }) {
             setLoading(false);
         }
     };
+    const handleGuesUserLogin = () => {
+        const guest = { email: 'guestuser@gmail.com', password: 'guest@123' }
+        setFormData(guest)
+    }
 
     return (
         <Flex height="100vh" align="center" justify="center" bgGradient={bgGradient} position="relative" overflow="hidden">
@@ -114,6 +118,12 @@ function Login({ setToken }) {
                         size="lg" borderRadius="full" w="full"
                     >
                         Login
+                    </Button>
+                    <Button isLoading={loading} onClick={handleGuesUserLogin} colorScheme="orange"
+                        _hover={{ bgGradient: "linear(to-r, blue.500, blue.700)", transform: "scale(1.05)" }} transition="0.3s ease-in-out"
+                        size="lg" borderRadius="full" w="full"
+                    >
+                        Guest User Login
                     </Button>
                 </VStack>
 
