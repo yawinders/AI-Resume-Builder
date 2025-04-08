@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Box, Button, Divider, Flex, Heading, Text, useToast, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Heading, Text, useColorMode, useToast, VStack } from "@chakra-ui/react";
 import FilledStar from "../miscellaneous/FilledBar";
 import FilledBar from "../miscellaneous/FilledBar";
 import { useLocation } from "react-router-dom";
@@ -61,6 +61,7 @@ function ResumePreview({ formData, themeColor }) {
 
         pdf.save("resume.pdf");
     };
+    const { colorMode, toggleColorMode } = useColorMode();
     return (
         <>
             {resumeData && <Box mt="20px">
@@ -75,7 +76,9 @@ function ResumePreview({ formData, themeColor }) {
                 }}
                 mx={resumeData ? "auto" : null}
                 p={6}
-                bg="gray.50"
+                // bg="gray.50"
+                bg={colorMode === 'light' ? 'gray.50' : 'white'}
+                color={colorMode === 'light' ? 'gray.900' : 'black'}
                 borderRadius="lg"
                 boxShadow="lg"
                 borderTop={`8px solid ${themeColor || resumeData.themeColor}`}
@@ -121,7 +124,7 @@ function ResumePreview({ formData, themeColor }) {
                         </Flex>
                         <Text>{formData?.company || resumeData?.company}</Text>
                     </Box>
-                    <ul style={{ marginLeft: "10px" }}>{formData?.experience?.split('*').map((d, i) => {
+                    <ul bg={colorMode === 'light' ? 'gray.50' : 'gray.900'} style={{ marginLeft: "10px" }}>{formData?.experience?.split('*').map((d, i) => {
                         if (i === 0) return null;
                         return <li key={i}>{d}</li>
                     }) || resumeData?.experience?.split('*').map((d, i) => {
@@ -189,3 +192,5 @@ function ResumePreview({ formData, themeColor }) {
 }
 
 export default ResumePreview;
+
+

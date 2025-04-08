@@ -1,11 +1,13 @@
 import React from "react";
-import { Box, Flex, Heading, Spacer, Button, HStack, IconButton, useDisclosure, Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Avatar, Menu, MenuButton, MenuList, MenuItem, Image } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
-import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { Box, Flex, Heading, Spacer, Button, HStack, IconButton, useDisclosure, Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Avatar, Menu, MenuButton, MenuList, MenuItem, Image, Stack, useColorMode, Container, useColorModeValue } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { ChevronDownIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { useAuthentication } from "../context/authContext";
 import ProfileModal from "../miscellaneous/ProfileModal";
 import { useResumeContext } from "../context/resumeTemplateContext";
 import Logo from '../assets/logo.webp'
+import logoHome from "../assets/logohome.png"
+import { Link } from '@chakra-ui/react';
 
 function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,25 +20,35 @@ function Navbar() {
 
     const { pic } = useAuthentication()
     const handleLogout = () => {
+        if (!confirm('Confirm Logout')) return;
         localStorage.removeItem("userInfo");
-        navigate("/login");
+        navigate("/");
     };
     const { formData, setFormData } = useResumeContext()
 
+    const { colorMode, toggleColorMode } = useColorMode();
+
+    const handleSignIn = () => {
+        navigate('/login');
+    }
+
     return (
         <Box
-            bgGradient="linear(to-r, blue.700, purple.600)"
+            // bgGradient="linear(to-r, blue.700, purple.600)"
             px={6} py={4}
-            color="white"
+            // color="white"
             boxShadow="xl"
             position="sticky"
             top="0"
             zIndex="1000"
+            bg={colorMode === 'light' ? 'white' : 'gray.800'}
+            color={useColorModeValue("gray.800", "white")}
         >
-            <Flex align="center">
+            <Flex align="center" >
                 <Heading size="lg" fontWeight="bold" fontFamily="Poppins, sans-serif" display="flex" gap={5} alignItems="center">
-                    <Box boxSize='sm' w="75px" h="auto" borderRadius="50%" overflow="hidden" border="2px solid white">
-                        <Image src={Logo} />
+                    <Box boxSize='sm' w="120px" h="auto" mr={{ base: 4, md: 8 }}
+                        borderRadius={5} overflow="hidden" border="2px solid white">
+                        <Image src={logoHome} />
                     </Box>
                     <Link to="/dashboard" _hover={{ textDecoration: "none", color: "cyan.300" }}>
                         AI Resume Builder
@@ -46,12 +58,28 @@ function Navbar() {
                 <Spacer />
 
                 {/* Desktop Navigation */}
-                <HStack spacing={6} display={{ base: "none", md: "flex" }}>
+                <HStack HStack spacing={6} display={{ base: "none", md: "flex" }}>
+                    <Stack
+                        direction={{ base: 'column', md: 'row' }}
+                        display={{ base: 'none', md: 'flex' }}
+                        gap={{ base: 2, md: 6 }}
+                    >
+                        <Link to='/' href="/" fontWeight="medium" _hover={{ color: "blue.500" }}>Home</Link>
+                        <Link href="/#features" fontWeight="medium" _hover={{ color: "blue.500" }}>Features</Link>
+                        <Link href="/#aboutpage" fontWeight="medium" _hover={{ color: "blue.500" }}>About</Link>
+                        <Link href="/#contactpage" fontWeight="medium" _hover={{ color: "blue.500" }}>Contact</Link>
+                    </Stack>
+                    <IconButton
+                        aria-label="Toggle color mode"
+                        icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                        onClick={toggleColorMode}
+                        variant="ghost"
+                    />
                     <Menu >
                         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                             <Avatar size='sm' cursor='pointer'
-                                name={user.name}
-                                src={user.pic} />
+                                name={user?.name}
+                                src={user?.pic} />
                         </MenuButton>
                         <MenuList>
                             <MenuItem color={"black"}>
@@ -64,9 +92,10 @@ function Navbar() {
                     </Menu>
                     <Button
                         as={Link} to="/dashboard"
-                        variant="ghost" color="white"
+                        variant="ghost"
                         _hover={{ bg: "whiteAlpha.300", transform: "scale(1.1)" }}
                         transition="all 0.3s"
+                        color={useColorModeValue("gray.800", "white")}
                     >
                         Dashboard
                     </Button>
@@ -95,10 +124,10 @@ function Navbar() {
                     display={{ base: "flex", md: "none" }}
                     onClick={onOpen}
                 />
-            </Flex>
+            </Flex >
 
             {/* Mobile Drawer Menu */}
-            <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+            <Drawer Drawer isOpen={isOpen} placement="right" onClose={onClose} >
                 <DrawerOverlay />
                 <DrawerContent bgGradient="linear(to-r, blue.700, purple.600)">
                     <DrawerCloseButton color="white" />
@@ -130,8 +159,59 @@ function Navbar() {
                         </VStack>
                     </DrawerBody>
                 </DrawerContent>
-            </Drawer>
-        </Box>
+            </Drawer >
+        </Box >
+
+        // <Box
+        //     as="nav"
+        //     bg={colorMode === 'light' ? 'white' : 'gray.800'}
+        //     py={4}
+        //     boxShadow="sm"
+        // >
+        //     <Container maxW="container.lg">
+        //         <Flex justify="space-between" align="center">
+        //             <Flex align="center">
+        //                 <Image
+        //                     src={colorMode === 'light'
+        //                         // "https://dummyimage.com/160x40/3182ce/ffffff.png&text=Logo"
+        //                         ? `${logoHome}`
+
+        //                         : `${logoHome}`
+        //                         //  "https://dummyimage.com/160x40/90cdf4/1a202c.png&text=Logo"
+
+        //                     }
+        //                     alt="Logo"
+        //                     h="40px"
+        //                     mr={{ base: 4, md: 8 }}
+        //                     borderRadius={5}
+        //                 />
+        //                 <Stack
+        //                     direction={{ base: 'column', md: 'row' }}
+        //                     display={{ base: 'none', md: 'flex' }}
+        //                     gap={{ base: 2, md: 6 }}
+        //                 >
+        //                     <Link to='/' href="/" fontWeight="medium" _hover={{ color: "blue.500" }}>Home</Link>
+        //                     <Link href="/#features" fontWeight="medium" _hover={{ color: "blue.500" }}>Features</Link>
+        //                     <Link href="/#aboutpage" fontWeight="medium" _hover={{ color: "blue.500" }}>About</Link>
+        //                     <Link href="/#contactpage" fontWeight="medium" _hover={{ color: "blue.500" }}>Contact</Link>
+        //                 </Stack>
+        //             </Flex>
+        //             <Flex align="center" gap={4}>
+        //                 <IconButton
+        //                     aria-label="Toggle color mode"
+        //                     icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+        //                     onClick={toggleColorMode}
+        //                     variant="ghost"
+        //                 />
+        //                 {!token ? <Button onClick={handleSignIn} colorScheme="blue" size="sm" display={{ base: 'none', sm: 'block' }}>
+        //                     Sign In
+        //                 </Button> : <Button onClick={handleLogout} colorScheme="blue" size="sm" display={{ base: 'none', sm: 'block' }}>
+        //                     Log Out
+        //                 </Button>}
+        //             </Flex>
+        //         </Flex>
+        //     </Container>
+        // </Box>
     );
 }
 

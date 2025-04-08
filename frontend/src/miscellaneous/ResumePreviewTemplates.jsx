@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text, VStack, HStack, Divider, Icon, List, ListItem, ListIcon, Button } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, VStack, HStack, Divider, Icon, List, ListItem, ListIcon, Button, useColorModeValue } from "@chakra-ui/react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaBriefcase, FaProjectDiagram, FaGraduationCap, FaTools, FaHeart, FaLanguage, FaCheckCircle, FaStar, FaFile, FaCommentDots } from "react-icons/fa";
 import { downloadResumeAsPDF } from "./DownlaoadResumePdf";
 import { useRef, useState } from "react";
@@ -72,6 +72,7 @@ export const Template1 = ({ formData, resume, resumeRef }) => {
 
 
             <Box
+                color={useColorModeValue("black", "black")}
                 ref={resumeRef && resumeRef}
                 width="100%" height="100%" bgGradient="linear(to-b, teal.100, blue.100)" p={8} m="auto" boxShadow="lg" borderRadius="md" border="1px solid gray">
                 <VStack align="start" spacing={2} mb={4}>
@@ -195,6 +196,7 @@ export const Template2 = ({ formData, resume, resumeRef }) => {
     console.log("resume", resume);
     return (
         <Box
+            color={useColorModeValue("black", "black")}
             ref={resumeRef}
             width="100%" height="100%"
             bgGradient="linear(to-b, purple.100, pink.100)"
@@ -348,6 +350,7 @@ export const Template3 = ({ formData, resume, resumeRef }) => {
 
     return (
         <Box
+            color={useColorModeValue("black", "black")}
             ref={resumeRef}
             width="100%" height="100%" p={8} bgGradient="linear(to-r, teal.200, blue.300)" boxShadow="2xl" borderRadius="10px" m="auto" >
             <Flex>

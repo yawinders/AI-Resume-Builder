@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Box, Button, Grid, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Input, Image, VStack, Text, Icon, useDisclosure, IconButton, useToast, ModalFooter } from "@chakra-ui/react";
+import { Box, Button, Grid, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Input, Image, VStack, Text, Icon, useDisclosure, IconButton, useToast, ModalFooter, useColorModeValue, useColorMode } from "@chakra-ui/react";
 import { FaPlus, FaFileAlt, FaRegFileAlt, FaAcquisitionsIncorporated } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,9 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { AuthContext } from "../context/authContext";
 import resumeThumbaNail from "../assets/resume thumbnail.webp"
 import { useResumeContext } from "../context/resumeTemplateContext";
+import FeaturesSection from "../components/Features";
+import { AboutPage } from "../components/About";
+import { ContactPage } from "../components/Contact";
 
 function Dashboard() {
     const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -30,6 +33,9 @@ function Dashboard() {
     // console.log(pic);
 
     // console.log(user);
+    const modalBg = useColorModeValue("white", "gray.800");
+    const textColor = useColorModeValue("gray.600", "gray.300");
+    const headingIconColor = useColorModeValue("blue.500", "blue.300");
 
 
     const toast = useToast();
@@ -202,139 +208,161 @@ function Dashboard() {
         // setFormData({})
         navigate('/choosed-resume-maker', { state: { selectedResume, resume } })
     }
+    const { colorMode, toggleColorMode } = useColorMode();
+    const cardBg = useColorModeValue("white", "gray.800");
+    const cardBorder = useColorModeValue("gray.200", "gray.700");
     return (
-        <Box p={6} bgGradient="linear-gradient(135deg, #232526, #414345);" minH="100vh" color="white">
-            <Heading mb={6} textAlign="center" fontSize="3xl">
-                Your Resumes <WelcomeMessage />
-            </Heading>
+        <Box p={6} bgGradient="linear-gradient(135deg, #232526, #414345);" minH="100vh" color="white" bg={colorMode === 'light' ? 'gray.50' : 'gray.900'}>
+            <Box py={12} px={{ base: 4, md: 8 }}>
+                <Heading mb={6} textAlign="center" fontSize="3xl" color={useColorModeValue("gray.600", "gray.400")}>
+                    Your Resumes <WelcomeMessage />
+                </Heading>
 
-            <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }} gap={6}>
-                {resumes.length > 0 ? (
-                    resumes.map((resume, index) => (
-                        <Box
-                            key={index}
-                            p={4}
-                            bg="white"
-                            borderRadius="md"
-                            textAlign="center"
-                            color="gray.800"
-                            boxShadow="lg"
-                            transition="0.3s"
-                            _hover={{ transform: "scale(1.05)" }}
-                            cursor="pointer"
-                            onClick={() => handleEditClick(resume)}
-                        >
-                            <Box h="250px" bg="gray.200" borderRadius="md" mb={4} display="flex" alignItems="center" justifyContent="center">
-                                <Image src={resumeThumbaNail} w="100%" height="100%" />
-                                {/* <Icon as={FaFileAlt} boxSize={12} color="gray.500" /> */}
-                            </Box>
-                            <Heading size="md">{resume.resumeName}  <IconButton isLoading={delLoading} onClick={(e) => handleResumeDelete(e, resume._id)} icon={<DeleteIcon />} /></Heading>
+                <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }} gap={6}>
+                    {resumes.length > 0 ? (
+                        resumes.map((resume, index) => (
+                            <Box
 
-                        </Box>
-                    ))
-                ) : (
-                    <VStack w="full" spacing={4}>
-                        <Icon as={FaAcquisitionsIncorporated} boxSize="150px" color="gray.400" />
-                        <Text fontSize="lg">No Default resumes created yet.</Text>
-                    </VStack>
-                )}
-                {chooseResumes.length > 0 ? (
-                    chooseResumes.map((resume, index) => (
-                        <Box
-                            key={index}
-                            p={4}
-                            bg="white"
-                            borderRadius="md"
-                            textAlign="center"
-                            color="gray.800"
-                            boxShadow="lg"
-                            transition="0.3s"
-                            _hover={{ transform: "scale(1.05)" }}
-                            cursor="pointer"
-                            onClick={() => handleChooseEditClick(resume)}
-                        >
-                            <Box h="250px" bg="gray.200" borderRadius="md" mb={4} display="flex" alignItems="center" justifyContent="center">
-                                <Image src={resumeThumbaNail} w="100%" height="100%" />
-                                {/* <Icon as={FaFileAlt} boxSize={12} color="gray.500" /> */}
-                            </Box>
-                            <Heading size="md">{resume.resumeName}  <IconButton isLoading={chooseDelLoading} onClick={(e) => handleChooseResumeDelete(e, resume._id)}
-                                icon={<DeleteIcon />} /></Heading>
+                                key={index}
+                                p={4}
 
-                        </Box>
-                    ))
-                ) : (
-                    null
-                )}
-
-
-
-                <Button
-                    onClick={onOpen}
-                    colorScheme="yellow"
-                    size="lg"
-                    borderRadius="full"
-                    p={6}
-                    boxShadow="xl"
-                    _hover={{ transform: "scale(1.1)" }}
-                >
-                    <Icon as={FaPlus} boxSize={6} />
-                </Button>
-            </Grid>
-
-            {/* Modal to Add Resume */}
-            <Modal isOpen={isOpen} onClose={onClose} size="md" motionPreset="slideInBottom">
-                <ModalOverlay />
-                <ModalContent borderRadius="lg" boxShadow="xl" bg="white">
-                    <ModalHeader textAlign="center" fontSize="xl" fontWeight="bold">
-                        <Icon as={FaRegFileAlt} boxSize={6} color="blue.500" mr={2} />
-                        Create a New Resume
-                    </ModalHeader>
-                    <ModalCloseButton />
-
-                    <ModalBody>
-                        <VStack spacing={4}>
-                            <Text fontSize="sm" color="gray.600" textAlign="center">
-                                Give your resume a unique name to get started!
-                            </Text>
-                            <Input
-                                placeholder="Enter Resume Name"
-                                value={newResumeName}
-                                onChange={(e) => setNewResumeName(e.target.value)}
-                                size="lg"
-                                focusBorderColor="blue.500"
                                 borderRadius="md"
-                                boxShadow="sm"
-                            />
-                        </VStack>
-                    </ModalBody>
-
-                    <ModalFooter justifyContent="center">
-                        <Box
-                            display="flex"
-                            flexDir="column"
-                            gap="20px"
-                        >
-                            <Text>Choose the template OR Go with the Default one</Text>
-
-                            <Button colorScheme="orange" size="lg"
-                                onClick={handleChoose}
-                            >Choose</Button>
-                            <Button
-                                isLoading={createdloading}
-                                colorScheme="blue"
-                                size="lg"
-                                width="full"
-                                borderRadius="md"
-                                boxShadow="md"
-                                _hover={{ bg: "blue.600" }}
-                                onClick={handleAddResume}
+                                textAlign="center"
+                                // color="gray.800"
+                                boxShadow="lg"
+                                transition="0.3s"
+                                _hover={{ transform: "scale(1.05)" }}
+                                cursor="pointer"
+                                onClick={() => handleEditClick(resume)}
+                                bg={cardBg}
+                                border={cardBorder}
+                                color={useColorModeValue("gray.600", "gray.400")}
+                                w="350px"
                             >
-                                Default
-                            </Button>
-                        </Box>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                                <Box h="250px" bg="gray.200" borderRadius="md" mb={4} display="flex" alignItems="center" justifyContent="center">
+                                    <Image src={resumeThumbaNail} w="100%" height="100%" />
+                                    {/* <Icon as={FaFileAlt} boxSize={12} color="gray.500" /> */}
+                                </Box>
+                                <Heading size="md">{resume.resumeName}  <IconButton isLoading={delLoading} onClick={(e) => handleResumeDelete(e, resume._id)} icon={<DeleteIcon />} /></Heading>
+
+                            </Box>
+                        ))
+                    ) : (
+                        <VStack w="full" spacing={4}>
+                            <Icon as={FaAcquisitionsIncorporated} boxSize="150px" color="gray.400" />
+                            <Text fontSize="lg">No Default resumes created yet.</Text>
+                        </VStack>
+                    )}
+                    {chooseResumes.length > 0 ? (
+                        chooseResumes.map((resume, index) => (
+                            <Box
+                                key={index}
+                                p={4}
+                                // bg="white"
+                                borderRadius="md"
+                                textAlign="center"
+                                // color="gray.800"
+                                boxShadow="lg"
+                                transition="0.3s"
+                                _hover={{ transform: "scale(1.05)" }}
+                                cursor="pointer"
+                                onClick={() => handleChooseEditClick(resume)}
+                                bg={cardBg}
+                                border={cardBorder}
+                                color={useColorModeValue("gray.600", "gray.400")}
+                                w='350px'
+                            >
+                                <Box h="250px" bg="gray.200" borderRadius="md" mb={4} display="flex" alignItems="center" justifyContent="center">
+                                    <Image src={resumeThumbaNail} w="100%" height="100%" />
+                                    {/* <Icon as={FaFileAlt} boxSize={12} color="gray.500" /> */}
+                                </Box>
+                                <Heading size="md">{resume.resumeName}  <IconButton isLoading={chooseDelLoading} onClick={(e) => handleChooseResumeDelete(e, resume._id)}
+                                    icon={<DeleteIcon />} /></Heading>
+
+                            </Box>
+                        ))
+                    ) : (
+                        null
+                    )}
+
+
+
+                    <Button
+                        onClick={onOpen}
+                        colorScheme="yellow"
+                        size="lg"
+                        borderRadius="full"
+                        p={6}
+                        boxShadow="xl"
+                        _hover={{ transform: "scale(1.1)" }}
+                        bg={cardBg}
+                        border={cardBorder}
+                        color={useColorModeValue("gray.600", "gray.400")}
+                    >
+                        <Icon as={FaPlus} boxSize={6} />
+                    </Button>
+                </Grid>
+
+                {/* Modal to Add Resume */}
+                <Modal isOpen={isOpen} onClose={onClose} size="md" motionPreset="slideInBottom">
+                    <ModalOverlay />
+                    <ModalContent borderRadius="lg" boxShadow="xl" bg={modalBg}>
+                        <ModalHeader textAlign="center" fontSize="xl" fontWeight="bold">
+                            <Icon as={FaRegFileAlt} boxSize={6} color={headingIconColor} mr={2} />
+                            Create a New Resume
+                        </ModalHeader>
+                        <ModalCloseButton />
+
+                        <ModalBody>
+                            <VStack spacing={4}>
+                                <Text fontSize="sm" color={textColor} textAlign="center">
+                                    Give your resume a unique name to get started!
+                                </Text>
+                                <Input
+                                    placeholder="Enter Resume Name"
+                                    value={newResumeName}
+                                    onChange={(e) => setNewResumeName(e.target.value)}
+                                    size="lg"
+                                    focusBorderColor="blue.500"
+                                    borderRadius="md"
+                                    boxShadow="sm"
+                                />
+                            </VStack>
+                        </ModalBody>
+
+                        <ModalFooter justifyContent="center">
+                            <Box display="flex" flexDir="column" gap="20px">
+                                <Text color={textColor}>Choose the template OR Go with the Default one</Text>
+
+                                <Button colorScheme="orange" size="lg" onClick={handleChoose}>
+                                    Choose
+                                </Button>
+                                <Button
+                                    isLoading={createdloading}
+                                    colorScheme="blue"
+                                    size="lg"
+                                    width="full"
+                                    borderRadius="md"
+                                    boxShadow="md"
+                                    _hover={{ bg: "blue.600" }}
+                                    onClick={handleAddResume}
+                                >
+                                    Default
+                                </Button>
+                            </Box>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
+            </Box>
+
+            <Box >
+                <Box id="features"></Box>
+                <FeaturesSection />
+                <Box id="aboutpage"></Box>
+                <AboutPage />
+                <Box id="contactpage"></Box>
+                <ContactPage />
+            </Box>
         </Box>
     );
 }

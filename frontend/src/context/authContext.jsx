@@ -14,13 +14,13 @@ export const AuthProvider = ({ children }) => {
     // const location = useLocation();
 
     const [pic, setPic] = useState()
-    useEffect(() => {
-        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-        if (!userInfo && location.pathname !== "/register") {
-            navigate('/login')
-        }
-        setUser(userInfo)
-    }, [navigate]);
+    // useEffect(() => {
+    //     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    //     if (!userInfo && location.pathname !== "/register") {
+    //         navigate('/login')
+    //     }
+    //     setUser(userInfo)
+    // }, [navigate]);
 
     return (
         <AuthContext.Provider value={{ user, setUser, pic, setPic }}>

@@ -40,7 +40,7 @@ function ResumeTemplates() {
 
         setChooseLoader(true)
         try {
-            const newResume = { userId: user.userId, resumeName: newResumeName, templateName: selectedResume }
+            const newResume = { userId: user?.userId, resumeName: newResumeName, templateName: selectedResume }
             const { data } = await axios.post(`${API_BASE_URL}/api/resume/create-c-resume`, newResume,
                 { headers: { Authorization: `Bearer ${user.token}` } }
             )
@@ -73,6 +73,7 @@ function ResumeTemplates() {
                 height="100vh"
                 bgGradient="linear(to-r, gray.100, blue.100)" // Background gradient
                 p={6}
+                color={useColorModeValue("gray.600", "gray.400")}
             >
                 {choices.map((c, i) => (
                     <Box

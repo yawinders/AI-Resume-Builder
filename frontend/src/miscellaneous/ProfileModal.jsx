@@ -36,7 +36,7 @@ function ProfileModal({ user, children }) {
                         fontFamily="Work sans"
                         display="flex"
                         justifyContent="center"
-                    >{user.name}</ModalHeader>
+                    >{user?.name}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody
                         display="flex"
@@ -45,9 +45,9 @@ function ProfileModal({ user, children }) {
                         alignItems="center"
                     >
                         <Avatar size='2xl' cursor='pointer'
-                            name={user.name}
-                            src={user.pic} />
-                        <Text >Email:{user.email}</Text>
+                            name={user?.name}
+                            src={user?.pic} />
+                        <Text >Email:{user?.email}</Text>
                     </ModalBody>
 
                     <ModalFooter>

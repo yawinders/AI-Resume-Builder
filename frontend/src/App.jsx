@@ -8,12 +8,14 @@ import ResumeMaker from './pages/ResumeMaker.jsx';
 import Navbar from './components/Navbar.jsx';
 import ResumePreview from './components/ResumePreview.jsx';
 
-import { protectedRoutes } from './protectedRoutes.jsx'
+// import { protectedRoutes } from './protectedRoutes.jsx'
 import ResumeTemplates from './pages/ResumeTemplates.jsx';
 import { ResumeTemplateProvider } from './context/resumeTemplateContext.jsx';
 import { Template1, Template2, Template3 } from './miscellaneous/ResumePreviewTemplates.jsx';
 import ChoosedResumeMaker from './pages/ChoosedResumeMaker.jsx';
 import ChoosedResumePreview from './components/ChoosedResumePreview.jsx';
+import HomePage from './pages/Home.jsx';
+import { ProtectedRoutes } from './protectedRoutes.jsx';
 
 function App() {
   // useLocation needs to be inside the Router context
@@ -28,15 +30,15 @@ function App() {
 
         {showNavbar && <Navbar />}
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<protectedRoutes><Dashboard /></protectedRoutes>} />
-          <Route path="/create-resume" element={<protectedRoutes><ResumeMaker /></protectedRoutes>} />
-          <Route path='/resume-preview' element={<protectedRoutes><ResumePreview /></protectedRoutes>} />
-          <Route path='/resume-templates' element={<protectedRoutes><ResumeTemplates /></protectedRoutes>} />
-          <Route path="/choosed-resume-maker" element={<protectedRoutes><ChoosedResumeMaker /></protectedRoutes>} />
-          <Route path="//choosed-preview" element={<protectedRoutes><ChoosedResumePreview /></protectedRoutes>} />
+          <Route path="/dashboard" element={<ProtectedRoutes><Dashboard /></ProtectedRoutes>} />
+          <Route path="/create-resume" element={<ResumeMaker />} />
+          <Route path='/resume-preview' element={<ResumePreview />} />
+          <Route path='/resume-templates' element={<ResumeTemplates />} />
+          <Route path="/choosed-resume-maker" element={<ProtectedRoutes><ChoosedResumeMaker /></ProtectedRoutes>} />
+          <Route path="/choosed-preview" element={<ChoosedResumePreview />} />
 
         </Routes>
       </ResumeTemplateProvider>
