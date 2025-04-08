@@ -74,7 +74,7 @@ export const ContactPage = () => {
                                 <Icon as={MdPhone} w={6} h={6} color="teal.500" mr={4} />
                                 <Box>
                                     <Text fontWeight="medium" color={headingColor}>Phone</Text>
-                                    <Text color={textColor}>+1 (555) 123-4567</Text>
+                                    <Text color={textColor}>9557716454</Text>
                                 </Box>
                             </Flex>
 
@@ -83,8 +83,8 @@ export const ContactPage = () => {
                                 <Box>
                                     <Text fontWeight="medium" color={headingColor}>Address</Text>
                                     <Text color={textColor}>
-                                        123 Resume Street<br />
-                                        San Francisco, CA 94107
+                                        <br />
+                                        Noida Uttar Pradesh
                                     </Text>
                                 </Box>
                             </Flex>
@@ -150,11 +150,11 @@ export const ContactPage = () => {
                     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
                         <Box>
                             <Text fontWeight="medium" color={headingColor}>Monday - Friday</Text>
-                            <Text color={textColor}>9:00 AM - 6:00 PM (PST)</Text>
+                            {/* <Text color={textColor}>9:00 AM - 6:00 PM (PST)</Text> */}
                         </Box>
                         <Box>
-                            <Text fontWeight="medium" color={headingColor}>Weekends</Text>
-                            <Text color={textColor}>10:00 AM - 4:00 PM (PST)</Text>
+                            {/* <Text fontWeight="medium" color={headingColor}>Weekends</Text>
+                            <Text color={textColor}>10:00 AM - 4:00 PM (PST)</Text> */}
                         </Box>
                     </SimpleGrid>
                 </Box>
