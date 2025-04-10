@@ -893,7 +893,8 @@ function ResumeMaker() {
                                 />
                                 <Button
                                     isLoading={aiLoading}
-                                    onClick={() => generate(`Generate professional experience in 4 lines for someone who worked at ${formData.company} for the role ${formData.role} for ${formData.duration}:`, "experience")}
+                                    onClick={() => generate(`Generate a concise and impactful 4-line professional experience summary, with each line separated by *, for someone who worked at ${formData.company} as a ${formData.role} for ${formData.duration}.
+Focus on key responsibilities, skills applied, technologies used, and notable achievements. Keep it professional and results-oriented.`, "experience")}
                                     colorScheme={themeColor}
                                 >
                                     Generate
