@@ -1,6 +1,7 @@
 # Ignore node_modules in both frontend & backend
 backend/node_modules/
 frontend/node_modules/
+/new_folder/node_modules/
 
 # Ignore environment files
 .env
