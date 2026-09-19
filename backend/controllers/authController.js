@@ -24,6 +24,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
 
     const { email, password } = req.body;
+    console.log(email, password);
 
     try {
 
@@ -39,6 +40,7 @@ export const login = async (req, res) => {
         res.json({ token, userId: user._id, name: user.name, email: user.email, pic: user.pic })
 
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: "Error logging in" });
     }
 }

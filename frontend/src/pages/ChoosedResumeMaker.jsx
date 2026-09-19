@@ -81,7 +81,7 @@ function ChoosedResumeMaker() {
         try {
             const newResume = {
                 resumeId: resume._id,
-                userId: user.userId,
+                userId: user?.userId,
                 personalInfo: formData.personalInfo,
                 summary: formData.summary,
                 experience: formData.experience,
@@ -93,7 +93,7 @@ function ChoosedResumeMaker() {
             };
 
             await axios.post(`${API_BASE_URL}/api/resume/update-c-resume`, newResume, {
-                headers: { Authorization: `Bearer ${user.token}` }
+                headers: { Authorization: `Bearer ${user?.token}` }
             });
 
             toast({

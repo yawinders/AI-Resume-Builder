@@ -3,6 +3,7 @@ import { Template1, Template2, Template3 } from "../miscellaneous/ResumePreviewT
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "./authContext";
 import axios from "axios";
+import { useToast } from "@chakra-ui/react";
 
 const resumeTemplateContext = createContext();
 
@@ -17,6 +18,7 @@ export const ResumeTemplateProvider = ({ children }) => {
     const [choices, setChoices] = useState(['Template1', 'Template2', 'Template3'])
     const navigate = useNavigate()
     const { user } = useAuthentication()
+    const toast = useToast();
     // console.log(chooseResumes);
     const [loading, setLoading] = useState(false)
 
@@ -75,7 +77,7 @@ export const ResumeTemplateProvider = ({ children }) => {
                     "Content-type": "application/json"
                 }
             }
-            const { data } = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${import.meta.env.VITE_OPENAI_API_KEY}`, requestData, config)
+            const { data } = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${import.meta.env.VITE_OPENAI_API_KEY}`, requestData, config)
             // console.log(data.candidates[0].content.parts[0].text);
             if (Array.isArray(formData[section])) {
                 const updatedSection = [...formData[section]];
